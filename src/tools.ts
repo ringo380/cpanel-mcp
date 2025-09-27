@@ -420,6 +420,32 @@ export const CPANEL_TOOLS: Tool[] = [
       required: ['domain', 'linekey']
     }
   },
+  {
+    name: 'edit_dns_record',
+    description: 'Edit an existing DNS record',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        domain: {
+          type: 'string',
+          description: 'The domain the record belongs to'
+        },
+        linekey: {
+          type: 'string',
+          description: 'The line key of the record to edit'
+        },
+        record: {
+          type: 'string',
+          description: 'The new record value'
+        },
+        ttl: {
+          type: 'number',
+          description: 'Time to live in seconds (optional)'
+        }
+      },
+      required: ['domain', 'linekey', 'record']
+    }
+  },
 
   // FTP Account Management
   {

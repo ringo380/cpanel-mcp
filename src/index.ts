@@ -21,7 +21,7 @@ class CpanelMCPServer {
     this.server = new Server(
       {
         name: 'cpanel-mcp',
-        version: '1.0.0',
+        version: '1.1.0',
       },
       {
         capabilities: {
@@ -213,6 +213,13 @@ class CpanelMCPServer {
               throw new CpanelError('Domain and linekey are required', 'VALIDATION_ERROR');
             }
             result = await this.cpanelClient.deleteDNSRecord(safeArgs.domain, safeArgs.linekey);
+            break;
+
+          case 'edit_dns_record':
+            if (!safeArgs.domain || !safeArgs.linekey || !safeArgs.record) {
+              throw new CpanelError('Domain, linekey, and record are required', 'VALIDATION_ERROR');
+            }
+            result = await this.cpanelClient.editDNSRecord(safeArgs.domain, safeArgs.linekey, safeArgs.record, safeArgs.ttl);
             break;
 
           // FTP Account Management

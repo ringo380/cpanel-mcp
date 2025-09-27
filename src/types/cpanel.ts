@@ -14,9 +14,23 @@ export interface CpanelResponse<T = any> {
     data: T[];
     event: {
       result: 1 | 0;
+      reason?: string;
     };
     module: string;
+    metadata?: {
+      command: string;
+      reason: string;
+      result: number;
+      version: number;
+    };
   };
+}
+
+export interface CpanelErrorData {
+  reason: string;
+  type?: string;
+  code?: string;
+  context?: any;
 }
 
 export interface FileManagerItem {
@@ -68,4 +82,77 @@ export interface CronJob {
   month: string;
   weekday: string;
   command: string;
+  enabled?: boolean;
+  created?: string;
+}
+
+export interface DiskUsage {
+  diskusage: {
+    [key: string]: {
+      diskused: number;
+      diskavail: number;
+      diskused_percent: number;
+      diskavail_percent: number;
+    };
+  };
+  quota: {
+    diskused: number;
+    diskquota: number;
+    diskused_percent: number;
+    diskavail_percent: number;
+  };
+}
+
+export interface SSLCertificate {
+  id: string;
+  friendly_name: string;
+  domains: string[];
+  issuer: string;
+  subject: string;
+  not_after: string;
+  not_before: string;
+  is_self_signed: boolean;
+  is_wildcard: boolean;
+  certificate_text: string;
+  private_key?: string;
+  ca_bundle?: string;
+}
+
+export interface Subdomain {
+  domain: string;
+  rootdomain: string;
+  dir: string;
+  hasstat: boolean;
+  reldir: string;
+  status: string;
+}
+
+export interface FTPAccount {
+  user: string;
+  homedir: string;
+  humandiskused: string;
+  humandiskquota: string;
+  diskused: number;
+  diskquota: number;
+  login_time: string;
+  diskused_percent: number;
+}
+
+export interface DatabaseUser {
+  user: string;
+  host: string;
+  privileges: string[];
+}
+
+export interface DNSRecord {
+  linekey: string;
+  line: string;
+  type: 'A' | 'AAAA' | 'CNAME' | 'MX' | 'TXT' | 'NS' | 'SRV' | 'PTR';
+  name: string;
+  record: string;
+  ttl: number;
+  priority?: number;
+  weight?: number;
+  port?: number;
+  target?: string;
 }

@@ -1,0 +1,264 @@
+{
+  "mcpServers": {
+    "cpanel-advanced": {
+      "command": "node",
+      "args": ["/path/to/cpanel-mcp/dist/index.js"],
+      "env": {
+        "CPANEL_HOSTNAME": "advanced-server.example.com",
+        "CPANEL_USERNAME": "advanced_user",
+        "CPANEL_API_TOKEN": "advanced_secure_token",
+        "CPANEL_SSL": "true",
+        "CPANEL_PORT": "2083",
+        "CPANEL_TIMEOUT": "45000",
+        "CPANEL_MAX_RETRIES": "5",
+        "CPANEL_RETRY_DELAY": "1500",
+        "CPANEL_RETRY_BACKOFF": "2.5",
+        "CPANEL_RATE_LIMIT": "50",
+        "CPANEL_RATE_WINDOW": "60000",
+        "LOG_LEVEL": "DEBUG",
+        "LOG_FORMAT": "json",
+        "LOG_FILE": "/var/log/cpanel-mcp/advanced.log",
+        "METRICS_ENABLED": "true",
+        "METRICS_PORT": "9090",
+        "HEALTH_CHECK_PORT": "8080",
+        "CIRCUIT_BREAKER_ENABLED": "true",
+        "CIRCUIT_BREAKER_THRESHOLD": "5",
+        "CIRCUIT_BREAKER_TIMEOUT": "30000",
+        "CACHE_ENABLED": "true",
+        "CACHE_TTL": "300000",
+        "ENCRYPTION_ENABLED": "true",
+        "COMPRESSION_ENABLED": "true",
+        "NODE_ENV": "production"
+      }
+    }
+  },
+  "connectionPool": {
+    "enabled": true,
+    "maxConnections": 10,
+    "minConnections": 2,
+    "acquireTimeout": 30000,
+    "idleTimeout": 300000,
+    "reapInterval": 60000
+  },
+  "caching": {
+    "enabled": true,
+    "provider": "redis",
+    "redis": {
+      "host": "localhost",
+      "port": 6379,
+      "password": "redis_password",
+      "db": 0,
+      "keyPrefix": "cpanel-mcp:",
+      "maxRetriesPerRequest": 3
+    },
+    "defaultTTL": 300000,
+    "cacheableOperations": [
+      "list_files",
+      "list_databases",
+      "get_disk_usage",
+      "list_email_accounts",
+      "list_domains",
+      "get_ssl_info"
+    ]
+  },
+  "circuitBreaker": {
+    "enabled": true,
+    "failureThreshold": 5,
+    "successThreshold": 3,
+    "timeout": 30000,
+    "monitor": true,
+    "fallback": {
+      "enabled": true,
+      "cacheFirst": true,
+      "staticResponse": {
+        "error": "Service temporarily unavailable"
+      }
+    }
+  },
+  "rateLimiting": {
+    "enabled": true,
+    "global": {
+      "maxRequests": 100,
+      "windowMs": 60000
+    },
+    "perUser": {
+      "maxRequests": 50,
+      "windowMs": 60000
+    },
+    "perOperation": {
+      "create_database": {
+        "maxRequests": 5,
+        "windowMs": 300000
+      },
+      "delete_database": {
+        "maxRequests": 3,
+        "windowMs": 300000
+      },
+      "create_email_account": {
+        "maxRequests": 10,
+        "windowMs": 300000
+      }
+    }
+  },
+  "security": {
+    "authentication": {
+      "required": true,
+      "methods": ["api_token", "oauth"],
+      "tokenValidation": {
+        "enabled": true,
+        "cache": true,
+        "cacheTTL": 3600000
+      }
+    },
+    "authorization": {
+      "enabled": true,
+      "rbac": {
+        "enabled": true,
+        "roles": {
+          "admin": ["*"],
+          "developer": [
+            "list_*",
+            "get_*",
+            "create_database",
+            "create_subdomain"
+          ],
+          "viewer": ["list_*", "get_*"]
+        }
+      }
+    },
+    "encryption": {
+      "enabled": true,
+      "algorithm": "aes-256-gcm",
+      "keyRotation": {
+        "enabled": true,
+        "interval": 86400000
+      }
+    },
+    "ipFiltering": {
+      "enabled": true,
+      "whitelist": [
+        "192.168.1.0/24",
+        "10.0.0.0/8",
+        "172.16.0.0/12"
+      ],
+      "blacklist": []
+    }
+  },
+  "monitoring": {
+    "enabled": true,
+    "metrics": {
+      "enabled": true,
+      "port": 9090,
+      "path": "/metrics",
+      "collectDefaultMetrics": true,
+      "customMetrics": {
+        "requestDuration": true,
+        "requestCount": true,
+        "errorRate": true,
+        "circuitBreakerState": true,
+        "cacheHitRate": true
+      }
+    },
+    "healthCheck": {
+      "enabled": true,
+      "port": 8080,
+      "path": "/health",
+      "checks": [
+        "cpanel_connection",
+        "database_connection",
+        "cache_connection",
+        "disk_space",
+        "memory_usage"
+      ]
+    },
+    "logging": {
+      "level": "info",
+      "format": "json",
+      "destination": "/var/log/cpanel-mcp/app.log",
+      "rotation": {
+        "enabled": true,
+        "maxSize": "100MB",
+        "maxFiles": 10,
+        "compress": true
+      },
+      "structured": true,
+      "includeTimestamp": true,
+      "includeLevel": true,
+      "includeMessage": true,
+      "includeMetadata": true
+    },
+    "alerting": {
+      "enabled": true,
+      "channels": ["email", "slack", "webhook"],
+      "rules": [
+        {
+          "name": "high_error_rate",
+          "condition": "error_rate > 0.05",
+          "severity": "critical",
+          "channels": ["email", "slack"]
+        },
+        {
+          "name": "circuit_breaker_open",
+          "condition": "circuit_breaker_state == 'open'",
+          "severity": "warning",
+          "channels": ["slack"]
+        },
+        {
+          "name": "high_response_time",
+          "condition": "avg_response_time > 5000",
+          "severity": "warning",
+          "channels": ["email"]
+        }
+      ]
+    }
+  },
+  "performance": {
+    "compression": {
+      "enabled": true,
+      "algorithm": "gzip",
+      "level": 6,
+      "threshold": 1024
+    },
+    "keepAlive": {
+      "enabled": true,
+      "timeout": 30000,
+      "maxSockets": 10
+    },
+    "requestDeduplication": {
+      "enabled": true,
+      "windowMs": 5000,
+      "keyGenerator": "operation+args_hash"
+    }
+  },
+  "backup": {
+    "enabled": true,
+    "schedule": "0 2 * * *",
+    "retention": {
+      "daily": 7,
+      "weekly": 4,
+      "monthly": 12
+    },
+    "compression": true,
+    "encryption": true,
+    "destinations": [
+      {
+        "type": "s3",
+        "bucket": "cpanel-mcp-backups",
+        "region": "us-west-2",
+        "accessKeyId": "AWS_ACCESS_KEY",
+        "secretAccessKey": "AWS_SECRET_KEY"
+      },
+      {
+        "type": "local",
+        "path": "/var/backups/cpanel-mcp"
+      }
+    ]
+  },
+  "development": {
+    "enabled": false,
+    "hotReload": true,
+    "debugMode": true,
+    "mockData": false,
+    "testMode": false
+  }
+}

@@ -9,7 +9,13 @@
     "dev": "tsc --watch",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathIgnorePatterns=integration",
+    "test:integration": "jest --testPathPatterns=integration",
+    "test:integration:setup": "echo 'Set CPANEL_TEST_* environment variables to run integration tests. See tests/integration/README.md for details.'"
   },
   "keywords": [
     "mcp",
@@ -25,10 +31,13 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
+    "jest": "^30.1.3",
+    "ts-jest": "^29.4.4",
     "typescript": "^5.0.0"
   },
   "engines": {

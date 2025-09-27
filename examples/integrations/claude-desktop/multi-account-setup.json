@@ -1,0 +1,71 @@
+{
+  "mcpServers": {
+    "cpanel-main": {
+      "command": "node",
+      "args": ["/path/to/cpanel-mcp/dist/index.js"],
+      "env": {
+        "CPANEL_HOSTNAME": "main-server.example.com",
+        "CPANEL_USERNAME": "main_admin",
+        "CPANEL_API_TOKEN": "${MAIN_CPANEL_TOKEN}",
+        "CPANEL_SSL": "true",
+        "LOG_LEVEL": "INFO",
+        "SERVER_NAME": "main-production"
+      }
+    },
+    "cpanel-staging": {
+      "command": "node",
+      "args": ["/path/to/cpanel-mcp/dist/index.js"],
+      "env": {
+        "CPANEL_HOSTNAME": "staging-server.example.com",
+        "CPANEL_USERNAME": "staging_admin",
+        "CPANEL_API_TOKEN": "${STAGING_CPANEL_TOKEN}",
+        "CPANEL_SSL": "true",
+        "LOG_LEVEL": "DEBUG",
+        "SERVER_NAME": "staging-environment"
+      }
+    },
+    "cpanel-client1": {
+      "command": "node",
+      "args": ["/path/to/cpanel-mcp/dist/index.js"],
+      "env": {
+        "CPANEL_HOSTNAME": "client1.example.com",
+        "CPANEL_USERNAME": "client1_user",
+        "CPANEL_API_TOKEN": "${CLIENT1_CPANEL_TOKEN}",
+        "CPANEL_SSL": "true",
+        "LOG_LEVEL": "WARN",
+        "SERVER_NAME": "client1-production",
+        "CLIENT_ID": "client1"
+      }
+    },
+    "cpanel-client2": {
+      "command": "node",
+      "args": ["/path/to/cpanel-mcp/dist/index.js"],
+      "env": {
+        "CPANEL_HOSTNAME": "client2.example.com",
+        "CPANEL_USERNAME": "client2_user",
+        "CPANEL_API_TOKEN": "${CLIENT2_CPANEL_TOKEN}",
+        "CPANEL_SSL": "true",
+        "LOG_LEVEL": "WARN",
+        "SERVER_NAME": "client2-production",
+        "CLIENT_ID": "client2"
+      }
+    }
+  },
+  "serverGroups": {
+    "production": ["cpanel-main", "cpanel-client1", "cpanel-client2"],
+    "staging": ["cpanel-staging"],
+    "internal": ["cpanel-main", "cpanel-staging"],
+    "clients": ["cpanel-client1", "cpanel-client2"]
+  },
+  "connectionManagement": {
+    "pooling": {
+      "enabled": true,
+      "maxConnections": 20,
+      "idleTimeout": 300000
+    },
+    "loadBalancing": {
+      "enabled": false,
+      "strategy": "round-robin"
+    }
+  }
+}

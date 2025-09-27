@@ -1,0 +1,84 @@
+{
+  "mcpServers": {
+    "cpanel-web1": {
+      "command": "node",
+      "args": ["/path/to/cpanel-mcp/dist/index.js"],
+      "env": {
+        "CPANEL_HOSTNAME": "web1.example.com",
+        "CPANEL_USERNAME": "admin_web1",
+        "CPANEL_API_TOKEN": "token_web1",
+        "CPANEL_SSL": "true",
+        "CPANEL_PORT": "2083",
+        "LOG_LEVEL": "INFO",
+        "SERVER_ROLE": "web",
+        "SERVER_NAME": "web1"
+      }
+    },
+    "cpanel-web2": {
+      "command": "node",
+      "args": ["/path/to/cpanel-mcp/dist/index.js"],
+      "env": {
+        "CPANEL_HOSTNAME": "web2.example.com",
+        "CPANEL_USERNAME": "admin_web2",
+        "CPANEL_API_TOKEN": "token_web2",
+        "CPANEL_SSL": "true",
+        "CPANEL_PORT": "2083",
+        "LOG_LEVEL": "INFO",
+        "SERVER_ROLE": "web",
+        "SERVER_NAME": "web2"
+      }
+    },
+    "cpanel-db1": {
+      "command": "node",
+      "args": ["/path/to/cpanel-mcp/dist/index.js"],
+      "env": {
+        "CPANEL_HOSTNAME": "db1.example.com",
+        "CPANEL_USERNAME": "admin_db1",
+        "CPANEL_API_TOKEN": "token_db1",
+        "CPANEL_SSL": "true",
+        "CPANEL_PORT": "2083",
+        "LOG_LEVEL": "INFO",
+        "SERVER_ROLE": "database",
+        "SERVER_NAME": "db1"
+      }
+    },
+    "cpanel-staging": {
+      "command": "node",
+      "args": ["/path/to/cpanel-mcp/dist/index.js"],
+      "env": {
+        "CPANEL_HOSTNAME": "staging.example.com",
+        "CPANEL_USERNAME": "staging_admin",
+        "CPANEL_API_TOKEN": "staging_token",
+        "CPANEL_SSL": "true",
+        "CPANEL_PORT": "2083",
+        "LOG_LEVEL": "DEBUG",
+        "SERVER_ROLE": "staging",
+        "SERVER_NAME": "staging"
+      }
+    }
+  },
+  "serverGroups": {
+    "production": ["cpanel-web1", "cpanel-web2", "cpanel-db1"],
+    "staging": ["cpanel-staging"],
+    "web": ["cpanel-web1", "cpanel-web2"],
+    "database": ["cpanel-db1"]
+  },
+  "loadBalancing": {
+    "enabled": true,
+    "strategy": "round-robin",
+    "healthCheck": {
+      "enabled": true,
+      "interval": 30000,
+      "timeout": 5000
+    }
+  },
+  "failover": {
+    "enabled": true,
+    "maxRetries": 3,
+    "retryDelay": 2000,
+    "fallbackServers": {
+      "cpanel-web1": "cpanel-web2",
+      "cpanel-web2": "cpanel-web1"
+    }
+  }
+}

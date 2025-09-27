@@ -1,0 +1,60 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# TypeScript files
+*.ts text
+*.tsx text
+
+# JavaScript files
+*.js text
+*.jsx text
+
+# JSON files
+*.json text
+
+# Markdown files
+*.md text
+
+# Configuration files
+*.yml text
+*.yaml text
+*.toml text
+*.ini text
+
+# Documentation
+docs/* text
+examples/* text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# Archives
+*.zip binary
+*.tar.gz binary
+*.tgz binary
+
+# Node.js
+node_modules/ export-ignore
+.npm/ export-ignore
+
+# Test files
+tests/ export-ignore
+*.test.ts export-ignore
+*.test.js export-ignore
+
+# Development files
+.eslintrc* export-ignore
+jest.config.js export-ignore
+tsconfig.json export-ignore
+
+# Git files
+.gitignore export-ignore
+.gitattributes export-ignore
+
+# GitHub files
+.github/ export-ignore
